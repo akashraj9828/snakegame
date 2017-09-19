@@ -25,9 +25,10 @@ function draw() {
 function renderSnake() {
 	s.update();
 	s.show();
+	s.updateTail()
 }
 
-function renderFood()){
+function renderFood(){
 	if (s.eat(food)) {
 		pickLocation();
 	}
@@ -42,7 +43,7 @@ function pickLocation() {
 	food.mult(scl);
 }
 
-
+var pause=false;
 function keyPressed() {
 	if (keyCode === UP_ARROW) {
 		s.dir(0, -1)
@@ -52,5 +53,18 @@ function keyPressed() {
 		s.dir(1, 0)
 	} else if (keyCode === LEFT_ARROW) {
 		s.dir(-1, 0)
-	}
+	}else  if(key=="p" || key=="P"){
+		play_pause()
+	  }
 }
+
+function play_pause(){
+	if(pause){
+	  pause=false;
+	  loop()
+	}else if(!pause){
+	  pause=true;
+	  noLoop();
+	}
+  
+  }
