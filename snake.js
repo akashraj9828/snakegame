@@ -49,11 +49,13 @@ function snake() {
 
 
 	this.eat = function (food) {
+
 		var d = dist(this.pos.x, this.pos.y, food.x, food.y)
 		if (d < scl) {
 			temp=createVector(this.pos.x,this.pos.y)
 			this.tail.push(temp)
 			// console.log("tail ddded")
+
 			return true;
 		} else {
 			return false;
