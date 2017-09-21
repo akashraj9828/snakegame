@@ -6,7 +6,7 @@ var score=0
 var pause=false;
 var w;
 var h;
-var difficulty=2;
+var difficulty=1.5;
 
 function setup() {
 	scl=floor(windowHeight/15)
@@ -44,7 +44,7 @@ function renderSnake() {
 
 function renderFood(){
 	if (s.eat(food)) {
-		score+=10;
+		score+=difficulty*10
 		pickLocation();
 	}
 	fill(100, 200, 100,);
@@ -101,28 +101,33 @@ function play_pause(){
 }
   }
 
+  function reset(){
+	s.x=0
+	s.y=0
+	s.tail.splice(0,s.tail.length)
+	score=0
+	s.wallHit=false
+	s.bitted=false
+	s.dir(1,0)
+	pause=false
+	loop()
+  }
+
   function keyPressed() {
-	if (keyCode === UP_ARROW) {
+	if (keyCode === UP_ARROW||key=="W"||key=="w") {
 		s.dir(0, -1)
-	} else if (keyCode === DOWN_ARROW) {
+		console.log(keyCode)
+	} else if (keyCode === DOWN_ARROW || key=="S"||key=="s") {
 		s.dir(0, 1)
-	} else if (keyCode === RIGHT_ARROW) {
+	} else if (keyCode === RIGHT_ARROW||key=="D"||key=="d") {
 		s.dir(1, 0)
-	} else if (keyCode === LEFT_ARROW) {
+	} else if (keyCode === LEFT_ARROW||key=="A"||key=="a") {
 		s.dir(-1, 0)
 	}else  if(key=="p" || key=="P"){
 		play_pause()
 	}else if((s.bitted||s.wallHit) && (key=="x"||key=="X")){
-		s.x=0
-		s.y=0
-		s.tail.splice(0,s.tail.length)
-		score=0
-		s.wallHit=false
-		s.bitted=false
-		s.dir(1,0)
-		pause=false
-		clear()
-		loop()
+		reset()
+		
 	}
 	
 }
