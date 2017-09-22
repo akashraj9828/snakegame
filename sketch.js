@@ -1,6 +1,7 @@
 
 var scl = 40;
 var food;
+var walls=false
 
 function setup() {
 
@@ -23,9 +24,13 @@ function draw() {
 }
 
 function renderSnake() {
-	s.update();
+	s.wall()
 	s.show();
 	s.updateTail()
+	
+	s.update();
+	
+	
 }
 
 function renderFood(){
