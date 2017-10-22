@@ -16,6 +16,27 @@ myRec.continuous = true;
 myRec.interimResults = true;
 
 var most_recent_word
+
+myRec.onEnd = function() {
+	console.log('~~~~~~~~~~~')
+	console.log('Speech recognition service disconnected');
+	console.log('restarting service.......')
+	console.log('~~~~~~~~~~~')
+	
+	myRec.start()
+  }
+
+  myRec.onStart = function() {
+	console.log('------------------')
+	console.log('Speech recognition service started');
+	console.log('------------------')
+  }
+
+  myRec.onError = function() {
+	console.log('*****************')
+	console.log('Unexpected Error!!');
+	console.log('*****************')
+  }
 /*Speech recognition*/
 
 
