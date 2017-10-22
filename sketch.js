@@ -1,6 +1,7 @@
 /* GAME variables*/
 var scl = 40;
 var food;
+var s;
 var walls = false
 var score = 0
 var pause = false;
@@ -11,7 +12,7 @@ var difficulty = 0.5;
 
 /*speech rec variables*/
 
-var recognition_available 
+var recognition_available
 
 var myRec
 
@@ -21,20 +22,25 @@ function init_speech_rec() {
 	/*Speech recognition*/
 	if ('webkitSpeechRecognition' in window) {
 		recognition_available = true;
+		walls=false;
 
 		myRec = new p5.SpeechRec('en-US', parseResult);
 		myRec.continuous = true;
 		myRec.interimResults = true;
 
-		
+
 
 		myRec.onEnd = function () {
 			console.log('~~~~~~~~~~~')
 			console.log('Speech recognition service disconnected');
-			console.log('restarting service.......')
-			console.log('~~~~~~~~~~~')
 
-			myRec.start()
+			if(!pause)
+			if (!s.bitted && !s.wallHit) {
+				console.log('restarting service.......')
+				console.log('~~~~~~~~~~~')
+
+				myRec.start()
+			}
 		}
 
 		myRec.onStart = function () {
@@ -53,12 +59,7 @@ function init_speech_rec() {
 	}
 	else {
 		recognition_available = false;
-		push()
-		textSize(40)
-		textAlign(CENTER)
-		fill(255, 0, 0)
-		text("VOICE RECOGNITION \n NOT \n AVAILABLE", width / 2, 40)
-		pop()
+		walls=true;
 
 	}
 	/*Speech recognition*/
@@ -79,7 +80,7 @@ function setup() {
 
 	//Start speech recognition
 	init_speech_rec();
-	
+
 }
 
 function draw() {
@@ -139,7 +140,7 @@ function renderTexts() {
 
 	textSize(20)
 	fill(27, 225, 124, 140)
-	text("score:" + score, width / 9, height / 20)
+	text("score:" + score.toFixed(2), width / 9, height / 20)
 
 	textSize(15)
 	fill(255)
@@ -163,26 +164,34 @@ function renderTexts() {
 	}
 
 
-	if(recognition_available){
-
-	push()
-	textSize(20)
-	textAlign(LEFT)
-	fill(255, 255, 255)
-	textLeading(1000);  
-	text("commands available:: LEFT \t RIGHT \t UP \t DOWN \t STOP \t RESET \t RELOAD", 10, height-10)
+	if (recognition_available) {
 
 
-	textAlign(RIGHT)
-	fill(0, 255, 0, 90)
-	textSize(30)
-	text("COMAAND: \n"+ myRec.resultString, width, 40)
-	pop()
-	}else{
 		push()
 		textSize(40)
 		textAlign(CENTER)
-		fill(255, 0, 0,255-frameCount*10)
+		fill(0, 250, 0, 255 - frameCount * 10)
+		text("VOICE RECOGNITION  \n AVAILABLE", width / 2, 40)
+
+		textSize(20)
+		textAlign(LEFT)
+		fill(255, 255, 255)
+		text("commands available:: LEFT \t RIGHT \t UP \t DOWN \t STOP \t RESET \t RELOAD", 10, height - 10)
+
+
+		textAlign(RIGHT)
+		fill(0, 255, 0, 90)
+		textSize(30)
+		text("COMAAND: \n" + most_recent_word + "  ", width, 40)
+
+		fill(255, 0, 0, 90)
+		text("Difficulty:" + difficulty.toFixed(2)+ "  ", width, 110)
+		pop()
+	} else {
+		push()
+		textSize(40)
+		textAlign(CENTER)
+		fill(255, 0, 0, 255 - frameCount * 10)
 		text("VOICE RECOGNITION \n NOT \n AVAILABLE", width / 2, 40)
 		pop()
 	}
@@ -204,7 +213,6 @@ function reset() {
 function keyPressed() {
 	if (keyCode === UP_ARROW || key == "W" || key == "w") {
 		s.dir(0, -1)
-		console.log(keyCode)
 	} else if (keyCode === DOWN_ARROW || key == "S" || key == "s") {
 		s.dir(0, 1)
 	} else if (keyCode === RIGHT_ARROW || key == "D" || key == "d") {
