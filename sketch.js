@@ -9,36 +9,61 @@ var h;
 var difficulty = 0.5;
 /* GAME variables*/
 
+/*speech rec variables*/
 
-/*Speech recognition*/
-var myRec = new p5.SpeechRec('en-US', parseResult);
-myRec.continuous = true;
-myRec.interimResults = true;
+var recognition_available 
+
+var myRec
 
 var most_recent_word
+/*speech rec variables*/
+function init_speech_rec() {
+	/*Speech recognition*/
+	if ('webkitSpeechRecognition' in window) {
+		recognition_available = true;
 
-myRec.onEnd = function() {
-	console.log('~~~~~~~~~~~')
-	console.log('Speech recognition service disconnected');
-	console.log('restarting service.......')
-	console.log('~~~~~~~~~~~')
-	
-	myRec.start()
-  }
+		myRec = new p5.SpeechRec('en-US', parseResult);
+		myRec.continuous = true;
+		myRec.interimResults = true;
 
-  myRec.onStart = function() {
-	console.log('------------------')
-	console.log('Speech recognition service started');
-	console.log('------------------')
-  }
+		
 
-  myRec.onError = function() {
-	console.log('*****************')
-	console.log('Unexpected Error!!');
-	console.log('*****************')
-  }
-/*Speech recognition*/
+		myRec.onEnd = function () {
+			console.log('~~~~~~~~~~~')
+			console.log('Speech recognition service disconnected');
+			console.log('restarting service.......')
+			console.log('~~~~~~~~~~~')
 
+			myRec.start()
+		}
+
+		myRec.onStart = function () {
+			console.log('------------------')
+			console.log('Speech recognition service started');
+			console.log('------------------')
+		}
+
+		myRec.onError = function () {
+			console.log('*****************')
+			console.log('Unexpected Error!!');
+			console.log('*****************')
+		}
+
+		myRec.start()
+	}
+	else {
+		recognition_available = false;
+		push()
+		textSize(40)
+		textAlign(CENTER)
+		fill(255, 0, 0)
+		text("VOICE RECOGNITION \n NOT \n AVAILABLE", width / 2, 40)
+		pop()
+
+	}
+	/*Speech recognition*/
+
+}
 
 
 function setup() {
@@ -53,7 +78,8 @@ function setup() {
 	pickLocation();
 
 	//Start speech recognition
-	myRec.start()
+	init_speech_rec();
+	
 }
 
 function draw() {
@@ -137,30 +163,29 @@ function renderTexts() {
 	}
 
 
+	if(recognition_available){
 
 	push()
 	textSize(20)
-	textAlign(CENTER)
-	fill(255, 0, 0)
-	text("voice commands::", 20, 20)
-	fill(0, 0, 255)
-	text("left", 30, 35)
-	text("right", 30, 50)
-	text("up", 30, 65)
-	text("down", 30, 80)
-	text("stop", 30, 95)
-	text("clear", 30, 110)
+	textAlign(LEFT)
+	fill(255, 255, 255)
+	textLeading(1000);  
+	text("commands available:: LEFT \t RIGHT \t UP \t DOWN \t STOP \t RESET \t RELOAD", 10, height-10)
+
 
 	textAlign(RIGHT)
-	fill(0, 255, 0,50)
+	fill(0, 255, 0, 90)
 	textSize(30)
-	text("COMAAND:", width, 40)
-	fill(100,200,150)
-	text(" " + myRec.resultString, width, 60)
-
-	
+	text("COMAAND: \n"+ myRec.resultString, width, 40)
 	pop()
-
+	}else{
+		push()
+		textSize(40)
+		textAlign(CENTER)
+		fill(255, 0, 0,255-frameCount*10)
+		text("VOICE RECOGNITION \n NOT \n AVAILABLE", width / 2, 40)
+		pop()
+	}
 
 }
 
@@ -238,22 +263,22 @@ function parseResult() {
 			loop()
 		}
 		else
-		if (most_recent_word.indexOf("reset") !== -1) {
-			reset()
-		}
-		else
-		if (most_recent_word.indexOf("reload") !== -1) {
-			location.reload()
-		}
+			if (most_recent_word.indexOf("reset") !== -1) {
+				reset()
+			}
+			else
+				if (most_recent_word.indexOf("reload") !== -1) {
+					location.reload()
+				}
 
 	if (most_recent_word.indexOf("fast") !== -1) {
-		difficulty*=1.2;
+		difficulty *= 1.2;
 		frameRate(10 * difficulty);
 		// console.log(difficulty)
 	} else
 
 		if (most_recent_word.indexOf("slow") !== -1) {
-			difficulty*=0.8
+			difficulty *= 0.8
 			frameRate(10 * difficulty);
 			// console.log(difficulty)
 		}
